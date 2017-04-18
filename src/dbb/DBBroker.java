@@ -112,31 +112,67 @@ public class DBBroker {
         return listaRdnika;
     }
 
-    public void unesiListuUcinaka(Ucinak u, int indeks) throws SQLException {
-        String upit = "Insert into Ucinak values (?,?,?,?,?)";
-        PreparedStatement ps = konekcija.prepareStatement(upit);
-        ps.setInt(1, indeks);
+//    public void unesiListuUcinaka(Ucinak u, int indeks) throws SQLException {
+//        String upit = "Insert into Ucinak values (?,?,?,?,?)";
+//        PreparedStatement ps = konekcija.prepareStatement(upit);
+//        ps.setInt(1, indeks);
+//        ps.setInt(2, u.getBrojSati());
+//        ps.setDate(3, new Date(u.getDatum().getTime()));
+//        ps.setInt(4, u.getVrstaposla().getVrstaPoslaID());
+//        ps.setInt(5, u.getRadnik().getRadnikID());
+//        ps.executeUpdate();
+//
+//    }
+//
+//    public int vratiIndeks() {
+//        String upit = "SELECT max(UcinakID) as maks from Ucinak";
+//        int indeks = 0;
+//        try {
+//            Statement s = konekcija.createStatement();
+//            ResultSet rs = s.executeQuery(upit);
+//            while (rs.next()) {
+//                indeks = rs.getInt("maks");
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return indeks+1;
+//
+//    }
+
+    public void obrisiSve() throws SQLException {
+        String upit="delete from Ucinak";
+        PreparedStatement ps=konekcija.prepareStatement(upit);
+        ps.executeUpdate();
+        
+    }
+
+    public int vratiID() {
+        int id=0;
+        String upit="Select MAX(UcinakID) as maks from Ucinak";
+        try {
+            Statement s=konekcija.createStatement();
+            ResultSet rs=s.executeQuery(upit);
+            while (rs.next()) {                
+                id=rs.getInt("maks");
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id++;
+    }
+
+    public void sacuvajUcinak(Ucinak u, int id) throws SQLException {
+        String upit="Insert into Ucinak values(?,?,?,?,?)";
+        PreparedStatement ps=konekcija.prepareStatement(upit);
+        ps.setInt(1, id);
         ps.setInt(2, u.getBrojSati());
         ps.setDate(3, new Date(u.getDatum().getTime()));
         ps.setInt(4, u.getVrstaposla().getVrstaPoslaID());
         ps.setInt(5, u.getRadnik().getRadnikID());
+        
+        
         ps.executeUpdate();
-
-    }
-
-    public int vratiIndeks() {
-        String upit = "SELECT max(UcinakID) as maks from Ucinak";
-        int indeks = 0;
-        try {
-            Statement s = konekcija.createStatement();
-            ResultSet rs = s.executeQuery(upit);
-            while (rs.next()) {
-                indeks = rs.getInt("maks");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return indeks+1;
-
     }
 }

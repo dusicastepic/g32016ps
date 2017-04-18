@@ -48,29 +48,64 @@ public class Kontroler {
         return listaRdnika;
     }
 
-    public int vratiIndeks() {
-        return dbb.vratiIndeks();
+//    public int vratiIndeks() {
+//        return dbb.vratiIndeks();
+//    }
+//
+//    public boolean dodajListuucinaka(ArrayList<Ucinak> listaUcinaka)     {
+//        boolean uspesno=false;
+//        dbb.ucitajDrajver();
+//        dbb.otvoriKonekciju();
+//        int indeks=vratiIndeks();
+//        indeks++;
+//        try {
+//            for (Ucinak u : listaUcinaka) {
+//                dbb.unesiListuUcinaka(u, indeks);
+//                indeks++;
+//            }
+//            dbb.commit();
+//            uspesno=true;
+//
+//        } catch (SQLException se) {
+//            dbb.rollback();
+//            uspesno= false;
+//        }
+//
+//        dbb.zatvoriKonekciju();
+//        return uspesno;
+//    }
+    public boolean obrisiSve() {
+        boolean uspesno = false;
+        dbb.ucitajDrajver();
+        dbb.otvoriKonekciju();
+        try {
+            dbb.obrisiSve();
+            dbb.commit();
+            uspesno = true;
+        } catch (Exception e) {
+            dbb.rollback();
+            uspesno = false;
+        }
+        dbb.zatvoriKonekciju();
+        return uspesno;
     }
 
-    public boolean dodajListuucinaka(ArrayList<Ucinak> listaUcinaka)     {
+    public boolean sacuvajListu(ArrayList<Ucinak> listaUcinaka) {
         boolean uspesno=false;
         dbb.ucitajDrajver();
         dbb.otvoriKonekciju();
-        int indeks=vratiIndeks();
-        indeks++;
+        int id=dbb.vratiID();
         try {
             for (Ucinak u : listaUcinaka) {
-                dbb.unesiListuUcinaka(u, indeks);
-                indeks++;
+                dbb.sacuvajUcinak(u,id);
+                id++;
             }
             dbb.commit();
             uspesno=true;
-
-        } catch (SQLException se) {
+        } catch (Exception e) {
             dbb.rollback();
-            uspesno= false;
+            uspesno=false;
         }
-
         dbb.zatvoriKonekciju();
         return uspesno;
     }

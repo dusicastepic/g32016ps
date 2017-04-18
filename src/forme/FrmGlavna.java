@@ -61,6 +61,7 @@ public class FrmGlavna extends javax.swing.JFrame {
         jComboBoxradnici = new javax.swing.JComboBox();
         jTextFieldbrojsati = new javax.swing.JTextField();
         jTextFielddatum = new javax.swing.JTextField();
+        jButtonizbrisisve = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,6 +123,13 @@ public class FrmGlavna extends javax.swing.JFrame {
 
         jTextFielddatum.setText(" ");
 
+        jButtonizbrisisve.setText("Izbrisi sve unete ucinke");
+        jButtonizbrisisve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonizbrisisveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -147,6 +155,8 @@ public class FrmGlavna extends javax.swing.JFrame {
                             .addComponent(jTextFieldbrojsati)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonsacuvajucinkeradnika)
+                        .addGap(27, 27, 27)
+                        .addComponent(jButtonizbrisisve)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
@@ -183,7 +193,9 @@ public class FrmGlavna extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
-                .addComponent(jButtonsacuvajucinkeradnika)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonsacuvajucinkeradnika, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonizbrisisve, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -193,11 +205,10 @@ public class FrmGlavna extends javax.swing.JFrame {
     private void jButtonobrisiucinakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonobrisiucinakActionPerformed
         int red = jTableucinci.getSelectedRow();
         ModelTabeleUcinak mtu = (ModelTabeleUcinak) jTableucinci.getModel();
-        try{
-        mtu.obrisi(red);
-        }
-        catch(Exception e){
-        JOptionPane.showMessageDialog(this, "Niste selektovali red koji zelite da obrisete!","Greska",JOptionPane.ERROR_MESSAGE);
+        try {
+            mtu.obrisi(red);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Niste selektovali red koji zelite da obrisete!", "Greska", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonobrisiucinakActionPerformed
 
@@ -249,22 +260,39 @@ public class FrmGlavna extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtondodajucinakActionPerformed
 
     private void jButtonsacuvajucinkeradnikaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonsacuvajucinkeradnikaActionPerformed
-        ModelTabeleUcinak mtu=(ModelTabeleUcinak)jTableucinci.getModel();
-        ArrayList<Ucinak> listaUcinaka=mtu.vratiListeucinaka();
-        
-        boolean uspesno=false;
-        uspesno=Kontroler.getInstance().dodajListuucinaka(listaUcinaka);
+//        ModelTabeleUcinak mtu=(ModelTabeleUcinak)jTableucinci.getModel();
+//        ArrayList<Ucinak> listaUcinaka=mtu.vratiListeucinaka();
+//        
+//        boolean uspesno=false;
+//        uspesno=Kontroler.getInstance().dodajListuucinaka(listaUcinaka);
+//        if (uspesno) {
+//            JOptionPane.showMessageDialog(this, "Sve sacuvano");
+//        }
+//        else JOptionPane.showMessageDialog(this, "Nista nije sacuvano! Probaj opet!");
+//                
+        ModelTabeleUcinak mtu = (ModelTabeleUcinak) jTableucinci.getModel();
+        ArrayList<Ucinak> listaUcinaka = mtu.vratiListeucinaka();
+        boolean uspesno = Kontroler.getInstance().sacuvajListu(listaUcinaka);
         if (uspesno) {
-            JOptionPane.showMessageDialog(this, "Sve sacuvano");
-        }
-        else JOptionPane.showMessageDialog(this, "Nista nije sacuvano! Probaj opet!");
-                
-        
+            JOptionPane.showMessageDialog(this, "SVEE je sacuvano");
+        }else{
+        JOptionPane.showMessageDialog(this, "Nistaa nije sacuvano kak' treba!");}
+
     }//GEN-LAST:event_jButtonsacuvajucinkeradnikaActionPerformed
 
     private void jComboBoxvrstaposlaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxvrstaposlaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxvrstaposlaActionPerformed
+
+    private void jButtonizbrisisveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonizbrisisveActionPerformed
+        boolean uspesno = false;
+        uspesno = Kontroler.getInstance().obrisiSve();
+        if (uspesno) {
+            JOptionPane.showMessageDialog(this, "Sve je uspesnoo obrisano!", "Info", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Nista nije uspesnoo obrisano!", "Info", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonizbrisisveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -303,6 +331,7 @@ public class FrmGlavna extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtondodajucinak;
+    private javax.swing.JButton jButtonizbrisisve;
     private javax.swing.JButton jButtonobrisiucinak;
     private javax.swing.JButton jButtonsacuvajucinkeradnika;
     private javax.swing.JComboBox jComboBoxradnici;
