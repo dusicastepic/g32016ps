@@ -102,7 +102,7 @@ public class Kontroler {
             }
             dbb.commit();
             uspesno=true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             dbb.rollback();
             uspesno=false;
         }

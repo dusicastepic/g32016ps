@@ -69,6 +69,12 @@ public class ModelTabeleUcinak extends AbstractTableModel {
     }
 
     public ArrayList<Ucinak> vratiListeucinaka() {
+        fireTableDataChanged();
         return listeUcinaka;
+    }
+
+    public void izbrisiSve() {
+        listeUcinaka.removeAll(listeUcinaka);
+        fireTableDataChanged();
     }
 }

@@ -62,6 +62,7 @@ public class FrmGlavna extends javax.swing.JFrame {
         jTextFieldbrojsati = new javax.swing.JTextField();
         jTextFielddatum = new javax.swing.JTextField();
         jButtonizbrisisve = new javax.swing.JButton();
+        jButtonobrisisveucinke = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -130,6 +131,13 @@ public class FrmGlavna extends javax.swing.JFrame {
             }
         });
 
+        jButtonobrisisveucinke.setText("Obrisi sve ucinke");
+        jButtonobrisisveucinke.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonobrisisveucinkeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -151,6 +159,8 @@ public class FrmGlavna extends javax.swing.JFrame {
                             .addComponent(jComboBoxradnici, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButtonobrisiucinak)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonobrisisveucinke)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jTextFieldbrojsati)))
                     .addGroup(layout.createSequentialGroup()
@@ -189,7 +199,8 @@ public class FrmGlavna extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtondodajucinak)
-                    .addComponent(jButtonobrisiucinak))
+                    .addComponent(jButtonobrisiucinak)
+                    .addComponent(jButtonobrisisveucinke))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
@@ -270,13 +281,49 @@ public class FrmGlavna extends javax.swing.JFrame {
 //        }
 //        else JOptionPane.showMessageDialog(this, "Nista nije sacuvano! Probaj opet!");
 //                
+
         ModelTabeleUcinak mtu = (ModelTabeleUcinak) jTableucinci.getModel();
         ArrayList<Ucinak> listaUcinaka = mtu.vratiListeucinaka();
+        for (int i = 0; i < listaUcinaka.size(); i++) {
+            Ucinak u1 = listaUcinaka.get(i);
+            for (int j = i + 1; j < listaUcinaka.size(); j++) {
+                Ucinak u2 = listaUcinaka.get(j);
+                if (u1.getRadnik().getRadnikID() == u2.getRadnik().getRadnikID() && u1.getVrstaposla().getVrstaPoslaID() != u2.getVrstaposla().getVrstaPoslaID()) {
+                    JOptionPane.showMessageDialog(this, "Radnik moze samo JEDNU vrstu posla da radi!");
+                    return;
+                }
+
+            }
+
+        }
+        //8 sati maks
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        for (int i = 0; i < listaUcinaka.size(); i++) {
+            Ucinak u1 = listaUcinaka.get(i);
+            String datum = sdf.format(u1.getDatum());
+            int brsati = u1.getBrojSati();
+            for (int j = i + 1; j < listaUcinaka.size(); j++) {
+                Ucinak u2 = listaUcinaka.get(j);
+                String dat2 = sdf.format(u2.getDatum());
+                if (u1.getRadnik().getRadnikID() == u2.getRadnik().getRadnikID()
+                        && dat2.equals(datum)) {
+                    brsati += u2.getBrojSati();
+                }
+
+            }
+            if (brsati > 8) {
+                JOptionPane.showMessageDialog(this, "Broj sati ne moz biti veci od osam.");
+                return;
+            }
+        }
+
+        // String dat1 = sdf.format(u1.getDatum());
         boolean uspesno = Kontroler.getInstance().sacuvajListu(listaUcinaka);
         if (uspesno) {
             JOptionPane.showMessageDialog(this, "SVEE je sacuvano");
-        }else{
-        JOptionPane.showMessageDialog(this, "Nistaa nije sacuvano kak' treba!");}
+        } else {
+            JOptionPane.showMessageDialog(this, "Nistaa nije sacuvano kak' treba!");
+        }
 
     }//GEN-LAST:event_jButtonsacuvajucinkeradnikaActionPerformed
 
@@ -293,6 +340,11 @@ public class FrmGlavna extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Nista nije uspesnoo obrisano!", "Info", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonizbrisisveActionPerformed
+
+    private void jButtonobrisisveucinkeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonobrisisveucinkeActionPerformed
+        ModelTabeleUcinak mtu=(ModelTabeleUcinak)jTableucinci.getModel();
+        mtu.izbrisiSve();
+    }//GEN-LAST:event_jButtonobrisisveucinkeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -332,6 +384,7 @@ public class FrmGlavna extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtondodajucinak;
     private javax.swing.JButton jButtonizbrisisve;
+    private javax.swing.JButton jButtonobrisisveucinke;
     private javax.swing.JButton jButtonobrisiucinak;
     private javax.swing.JButton jButtonsacuvajucinkeradnika;
     private javax.swing.JComboBox jComboBoxradnici;
